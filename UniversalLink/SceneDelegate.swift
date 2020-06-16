@@ -12,6 +12,8 @@ import SwiftUI
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
+    
+    lazy var appState = AppState()
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
@@ -20,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Create the SwiftUI view that provides the window contents.
-        let contentView = ContentView()
+        let contentView = ContentView().environmentObject(appState)
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
@@ -57,6 +59,52 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Called as the scene transitions from the foreground to the background.
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
+    }
+    
+    // Parse Universal Link v1
+    func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) {
+        
+        print("v1")
+        
+        // Parse the deep link
+        guard let url = urlContexts.first?.url,
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
+        
+        for queryItem in components.queryItems ?? [] {
+            if queryItem.name == "publicid" {
+                
+                if queryItem.value != "" {
+                    appState.publicid = queryItem.value ?? "" // MARK: This code doesn't get executed, and publicID doesn't get updated with value from URL
+                }
+                
+                // URL to server-file https://qualk.dk/apple-app-site-association
+                // Test link to use https://qualk.dk/?publicid=myPublicID
+            }
+        }
+    }
+    
+    // Parse Universal Link v2
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+        
+        print("v2")
+        
+        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+            let url = userActivity.webpageURL,
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return false }
+        
+        for queryItem in components.queryItems ?? [] {
+            if queryItem.name == "publicid" {
+                
+                if queryItem.value != "" {
+                    appState.publicid = queryItem.value ?? "" // MARK: This code doesn't get executed, and publicID doesn't get updated with value from URL
+                }
+                
+                // URL to server-file https://qualk.dk/apple-app-site-association
+                // Test link to use https://qualk.dk/?publicid=myPublicID
+            }
+        }
+        
+        return true
     }
 
 

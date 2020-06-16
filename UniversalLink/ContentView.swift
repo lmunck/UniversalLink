@@ -9,8 +9,11 @@
 import SwiftUI
 
 struct ContentView: View {
+    
+    @EnvironmentObject var appState:AppState
+    
     var body: some View {
-        Text("Hello, World!")
+        Text(appState.publicid == "" ? "No publicID received" : "publicID is \(appState.publicid)")
     }
 }
 
@@ -18,4 +21,8 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
+}
+
+class AppState:ObservableObject {
+    @Published var publicid:String = ""
 }
