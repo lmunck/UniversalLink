@@ -61,10 +61,46 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
     
-    // Parse Universal Link v1
-    func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) {
+    
+    // Parse Universal Link v3
+    /*func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+      for context in URLContexts {
         
-        print("v1")
+        
+        print("url: \(context.url.absoluteURL)")
+        //print("scheme: \(context.url.scheme)")
+        //print("host: \(context.url.host)")
+        print("path: \(context.url.path)")
+        print("components: \(context.url.pathComponents)")
+      }
+    }*/
+
+    func scene(_ scene: UIScene, continue userActivity: NSUserActivity) {
+      guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
+        let url = userActivity.webpageURL else {
+          return
+      }
+        
+        let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+        for queryItem in components?.queryItems ?? [] {
+            if queryItem.name == "publicid" {
+                
+                if queryItem.value != "" {
+                    appState.publicid = queryItem.value ?? "" // MARK: This code doesn't get executed, and publicID doesn't get updated with value from URL
+                }
+                
+                // URL to server-file https://qualk.dk/apple-app-site-association
+                // Test link to use https://qualk.dk/?publicid=myPublicID
+            }
+        }
+
+      print("[SceneDelegate] \(url)")
+    }
+    
+    // Parse Universal Link v1
+    /*func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) {
+        
+        print("SceneDelegate v1")
         
         // Parse the deep link
         guard let url = urlContexts.first?.url,
@@ -81,12 +117,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 // Test link to use https://qualk.dk/?publicid=myPublicID
             }
         }
-    }
+    }*/
     
     // Parse Universal Link v2
-    func scene(_ scene: UIScene, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
+    /*func scene(_ scene: UIScene, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
-        print("v2")
+        print("SceneDelegate v2")
         
         guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
             let url = userActivity.webpageURL,
@@ -105,7 +141,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         
         return true
-    }
+    }*/
 
 
 }
