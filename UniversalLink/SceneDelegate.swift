@@ -96,52 +96,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
       print("[SceneDelegate] \(url)")
     }
-    
-    // Parse Universal Link v1
-    /*func scene(_ scene: UIScene, openURLContexts urlContexts: Set<UIOpenURLContext>) {
-        
-        print("SceneDelegate v1")
-        
-        // Parse the deep link
-        guard let url = urlContexts.first?.url,
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return }
-        
-        for queryItem in components.queryItems ?? [] {
-            if queryItem.name == "publicid" {
-                
-                if queryItem.value != "" {
-                    appState.publicid = queryItem.value ?? "" // MARK: This code doesn't get executed, and publicID doesn't get updated with value from URL
-                }
-                
-                // URL to server-file https://qualk.dk/apple-app-site-association
-                // Test link to use https://qualk.dk/?publicid=myPublicID
-            }
-        }
-    }*/
-    
-    // Parse Universal Link v2
-    /*func scene(_ scene: UIScene, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
-        
-        print("SceneDelegate v2")
-        
-        guard userActivity.activityType == NSUserActivityTypeBrowsingWeb,
-            let url = userActivity.webpageURL,
-            let components = URLComponents(url: url, resolvingAgainstBaseURL: false) else { return false }
-        
-        for queryItem in components.queryItems ?? [] {
-            if queryItem.name == "publicid" {
-                
-                if queryItem.value != "" {
-                    appState.publicid = queryItem.value ?? "" // MARK: This code doesn't get executed, and publicID doesn't get updated with value from URL
-                }
-                
-                // URL to server-file https://qualk.dk/apple-app-site-association
-                // Test link to use https://qualk.dk/?publicid=myPublicID
-            }
-        }
-        
-        return true
-    }*/
 
 
 }
